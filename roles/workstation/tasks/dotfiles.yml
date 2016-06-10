@@ -1,9 +1,94 @@
 ---
 
-- name: Get dotfiles
-  when: inventory_hostname in groups['personal_use']
+# - name: Get dotfiles
+#   when: inventory_hostname in groups['personal_use']
+#   become: true
+#   synchronize:
+#     src: /home/michael/Documents/dotfiles
+#     dest: /home/michael/Documents
+#     recursive: true
+#     archive: true
+
+# Set Up Vim
+# ==========
+
+- name: Create ~/.vim directory
+  file:
+    dest: /home/michael/.vim
+    owner: michael
+    group: michael
+    state: directory
+
+- name: copy across vimrc
+  copy:
+    src: ~/.vim/vimrc
+    dest: /home/michael/.vim/vimrc
+    owner: michael
+    group: michael
+    follow: true
+
+- name: Create ~/.vim/bundle directory
+  file:
+    dest: /home/michael/.vim/bundle
+    owner: michael
+    group: michael
+    state: directory
+
+- name: clone vundle
   git:
-    repo: michael@git.michaelfbryan.com:git/dotfiles.git
-    dest: ~/Documents/dotfiles
+    repo: https://github.com/VundleVim/Vundle.vim
+    dest: /home/michael/.vim/bundle/Vundle.vim
+    update: false
+    clone: true
     accept_hostkey: true
-    ssh_args: -A
+
+- name: Run "PluginInstall" for vim
+  become_user: michael
+  shell: vim +PluginInstall +qall
+  register: plugin_install
+  changed_when: "'already installed' not in plugin_install.stdout"
+
+- name: Check if YouCompleteMe is installed
+  stat: path=/home/michael/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so
+  register: ycm_core_file
+
+- name: Compile YouCompleteMe
+  shell: /usr/bin/python2 install.py --clang-completer
+  args:
+    chdir: /home/michael/.vim/bundle/YouCompleteMe
+  when: ycm_core_file.stat.exists == False
+
+# Set Up ZSH
+# ==========
+
+- name: Create ~/.oh-my-zsh directory
+  file:
+    dest: /home/michael/.oh-my-zsh
+    owner: michael
+    group: michael
+    state: directory
+
+- name: clone Oh-My-ZSH
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: /home/michael/.oh-my-zsh
+    update: true
+    clone: true
+    accept_hostkey: true
+
+- name: copy across zshrc
+  copy:
+    src: ~/.zshrc
+    dest: /home/michael/.zshrc
+    owner: michael
+    group: michael
+    follow: true
+
+- name: copy across custom ZSH prompt
+  copy:
+    src: ~/.oh-my-zsh/custom/prompt.zsh
+    dest:  ~/.oh-my-zsh/custom/prompt.zsh
+    owner: michael
+    group: michael
+    follow: true
+

@@ -1,56 +1,83 @@
 ---
-      - name: Install base packages
-        package: name={{ item }} state=latest 
-        with_items:
-            - cargo
-            - git
-            - gparted
-            - htop
-            - nmap
-            - ruby
-            - tmux
-            - tree
-            - ufw
-            - vim
-            - vlc
-            - wget
-            - youtube-dl
-            - zsh
 
-      - name: Install Arch specific packages
-        package: name={{ item }} state=latest
-        when: ansible_distribution == 'Archlinux'
-        with_items:
-            - cronie
-            - keepassx2
-            - python-pip
-            - rust
+- name: Install base packages
+  package: name={{ item }} state=latest 
+  with_items:
+    - cargo
+    - cmake
+    - git
+    - gparted
+    - htop
+    - nmap
+    - ruby
+    - tmux
+    - tree
+    - ufw
+    - vim
+    - vlc
+    - wget
+    - youtube-dl
+    - zsh
 
-      - name: Install Ubuntu specific packages
-        package: name={{ item }} state=latest
-        when: ansible_distribution == 'Ubuntu'
-        with_items:
-            - cron
-            - keepassx
-            - python3-matplotlib
-            - python3-pip
+- name: Install Arch specific packages
+  package: name={{ item }} state=latest
+  when: ansible_distribution == 'Archlinux'
+  with_items:
+    - cronie
+    - keepassx2
+    - python-pip
+    - rust
 
-      - name: Install Pips
-        pip: name={{ item }} state=present executable="pip3"
-        with_items:
-            - bs4
-            - cython
-            - flask
-            - jupyter
-            - matplotlib
-            - numpy
-            - pandas
-            - pyYAML
-            - requests
-            - sphinx
-            - sphinx_rtd_theme
-            - sqlalchemy
-            - tqdm
-            - virtualenv
-            - virtualenvwrapper
-            - youtube-dl
+- name: Install Ubuntu specific packages
+  package: name={{ item }} state=latest
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+    - cron
+    - keepassx
+    - python3-matplotlib
+    - python3-pip
+    - python3-dev
+    - python-dev
+
+- name: Install Pips
+  pip: name={{ item }} state=present executable="pip3"
+  with_items:
+    - bs4
+    - cython
+    - flask
+    - jupyter
+    - matplotlib
+    - numpy
+    - pandas
+    - pyYAML
+    - requests
+    - sphinx
+    - sphinx_rtd_theme
+    - sqlalchemy
+    - tqdm
+    - virtualenv
+    - virtualenvwrapper
+    - youtube-dl
+
+
+- name: Check if eMail is installed
+  command: command email 
+  register: check_email
+  ignore_errors: true
+
+- name: Git clone eMail
+  git: 
+    repo: https://github.com/deanproxy/eMail
+    dest: /tmp/email
+    recursive: true
+    update: false
+  when: check_email.rc != 0
+
+# For instructions on setting it up: https://github.com/deanproxy/eMail
+- name: Build eMail
+  shell: ./configure && make && make install
+  args:
+    chdir: /tmp/email
+  when: check_email.rc != 0
+
+

@@ -1,0 +1,14 @@
+---
+
+- name: Create Michael User
+  user: 
+    name: michael
+    state: present
+    update_password: on_create
+    generate_ssh_key: true
+    groups: sudo
+    append: true
+    shell: /bin/zsh
+    password: "$6$rounds=656000$dDWpSv3s.seQrpaL$mjKCAcfKfb21WM2BZ9PWBdWqktDhA2yAzWeOiY2qIHgFKWD/BlCWt5//3H9C3f9ETBSljP4/dWQCgqCOIteTy0"
+
+- name: Copy across sshd_config

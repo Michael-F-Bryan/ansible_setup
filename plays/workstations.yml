@@ -1,0 +1,6 @@
+---
+- hosts: personal_use
+  become: true
+  roles: 
+    - workstation
+

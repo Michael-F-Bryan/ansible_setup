@@ -1,0 +1,9 @@
+---
+
+- name: Get dotfiles
+  when: inventory_hostname in groups['personal_use']
+  git:
+    repo: michael@git.michaelfbryan.com:git/dotfiles.git
+    dest: ~/Documents/dotfiles
+    accept_hostkey: true
+    ssh_args: -A

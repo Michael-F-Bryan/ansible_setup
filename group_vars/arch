@@ -1,0 +1,3 @@
+---
+package_manager: pacman
+ansible_python_interpreter: /usr/bin/python2

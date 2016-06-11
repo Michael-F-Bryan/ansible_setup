@@ -9,3 +9,8 @@
   roles:
     - personal
 
+- hosts: webserver
+  become: true
+  roles:
+    - webserver
+

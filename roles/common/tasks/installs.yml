@@ -64,7 +64,6 @@
     - virtualenvwrapper
     - youtube-dl
 
-
 - name: Check if eMail is installed
   command: command email 
   register: check_email
@@ -86,5 +85,4 @@
   args:
     chdir: /tmp/email
   when: check_email.rc != 0
-
 

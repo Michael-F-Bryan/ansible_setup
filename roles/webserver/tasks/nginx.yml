@@ -1,0 +1,25 @@
+---
+
+- name: Add PPA for Nginx.
+  apt_repository:
+    repo: 'ppa:nginx/stable'
+    state: present
+    update_cache: yes
+  register: nginx_ppa_added
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Ensure nginx will reinstall if the PPA was just added.
+  apt:
+    name: nginx
+    state: absent
+  when: ansible_distribution == 'Ubuntu' and nginx_ppa_added.changed
+
+- name: Install nginx
+  package: 
+    name: nginx
+    state: latest
+
+- name: Make sure nginx is started
+  service:
+    name: nginx
+    state: started

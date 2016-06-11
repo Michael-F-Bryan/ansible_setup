@@ -1,0 +1,10 @@
+#!/bin/bash -l
+GIT_REPO=$HOME/blog.git
+TMP_GIT_CLONE=$HOME/tmp/git/awesomeblog
+PUBLIC_WWW=/var/www/blog
+
+git clone $GIT_REPO $TMP_GIT_CLONE
+jekyll build --source $TMP_GIT_CLONE --destination $PUBLIC_WWW
+rm -Rf $TMP_GIT_CLONE
+exit
+

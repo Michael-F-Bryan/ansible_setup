@@ -64,12 +64,15 @@
     - virtualenvwrapper
     - youtube-dl
 
+- name: Check if YouCompleteMe is installed
+  stat: path=/usr/local/bin/email
+  register: ycm_core_file
+
 - name: Check if eMail is installed
-  command: command email 
+  stat: path=/usr/local/bin/email
   register: check_email
   ignore_errors: true
-  failed_when: False
-  changed_when: check_email.rc
+  failed_when: check_email.stat.exists == False
 
 - name: Git clone eMail
   git: 
@@ -77,12 +80,12 @@
     dest: /tmp/email
     recursive: true
     update: false
-  changed_when: check_email.rc != 0
+  when: check_email.stat.exists == False
 
 # For instructions on setting it up: https://github.com/deanproxy/eMail
 - name: Build eMail
   shell: ./configure && make && make install
   args:
     chdir: /tmp/email
-  when: check_email.rc != 0
+  when: check_email.stat.exists == False
 

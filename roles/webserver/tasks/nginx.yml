@@ -19,7 +19,23 @@
     name: nginx
     state: latest
 
-- name: Make sure nginx is started
+- name: Make sure nginx is running
   service:
     name: nginx
     state: started
+    enabled: true
+
+- name: Copy across blog.conf
+  template: 
+    src: "blog.conf"
+    dest: /etc/nginx/sites-available/blog.conf
+    owner: root
+    mode: "u=rw,og=r"
+  notify: reload nginx
+
+- name: Symlink blog.conf
+  file:
+    src: /etc/nginx/sites-available/blog.conf
+    dest: /etc/nginx/sites-enabled/blog.conf
+    state: link
+

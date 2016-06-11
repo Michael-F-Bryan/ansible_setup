@@ -1,0 +1,69 @@
+---
+
+- name: Create jekyll group
+  group:
+    name: jekyll
+    state: present
+
+- name: Create jekyll User
+  user: 
+    name: jekyll
+    state: present
+    update_password: on_create
+    generate_ssh_key: true
+    group: jekyll
+    password: "$6$rounds=656000$KTt30znsUBTXOwEI$pQQfVoKP2sYly0RZPqB1ItUPph5Fo7eJ4bSLLjO/mun2A6p4OQiA40O9tUflQZRbYUgo4nU.KmP0yV369pRFW/"
+    createhome: true
+
+- name: Copy across blog.conf
+  template: 
+    src: "blog.conf"
+    dest: /etc/nginx/sites-available/blog.conf
+    owner: root
+    mode: "u=rw,og=r"
+  notify: reload nginx
+
+- name: Symlink blog.conf
+  file:
+    src: /etc/nginx/sites-available/blog.conf
+    dest: /etc/nginx/sites-enabled/blog.conf
+    state: link
+
+- name: Create /var/www directory
+  file:
+    dest: /var/www
+    state: directory
+    owner: jekyll
+    group: jekyll
+
+- name: Create /var/www/blog directory
+  file:
+    dest: /var/www/blog
+    state: directory
+    owner: jekyll
+    group: jekyll
+
+- name: Checkout blog repository
+  git:
+    repo: https://github.com/Michael-F-Bryan/blog.git
+    dest: /home/jekyll/blog.git
+    bare: true
+    update: true
+    accept_hostkey: true
+
+- name: Create git hooks directory
+  file:
+    dest: /home/jekyll/blog.git/hooks
+    state: directory
+    owner: jekyll
+    group: jekyll
+
+- name: Add post-receive hook
+  copy:
+    src: post-receive
+    dest: /home/jekyll/blog.git/hooks/post-receive
+    owner: jekyll
+    group: jekyll
+    mode: "u=rwx,og=rx"
+
+

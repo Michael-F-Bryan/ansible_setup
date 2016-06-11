@@ -4,5 +4,5 @@
   service: 
     name: iptables.service
     state: restarted
-    ignore_errors: true
+  ignore_errors: true
   register: reload_iptables

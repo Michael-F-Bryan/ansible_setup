@@ -84,10 +84,17 @@
     group: michael
     follow: true
 
+- name: Create ~/.oh-my-zsh/custom directory
+  file:
+    dest: /home/michael/.oh-my-zsh/custom
+    owner: michael
+    group: michael
+    state: directory
+
 - name: copy across custom ZSH prompt
   copy:
     src: ~/.oh-my-zsh/custom/prompt.zsh
-    dest:  ~/.oh-my-zsh/custom/prompt.zsh
+    dest:  /home/michael/.oh-my-zsh/custom/prompt.zsh
     owner: michael
     group: michael
     follow: true

@@ -12,12 +12,14 @@
     - ruby
     - tmux
     - tree
-    - ufw
-    - vim
     - vlc
     - wget
     - youtube-dl
     - zsh
+    - iptables
+
+- name: Ensure UFW isn't installed
+  package: name=ufw state=absent
 
 - name: Install Arch specific packages
   package: name={{ item }} state=latest
@@ -27,6 +29,7 @@
     - keepassx2
     - python-pip
     - rust
+    - gvim
 
 - name: Install Ubuntu specific packages
   package: name={{ item }} state=latest
@@ -38,6 +41,7 @@
     - python3-pip
     - python3-dev
     - python-dev
+    - vim-gtk
 
 - name: Install Pips
   pip: name={{ item }} state=present executable="pip3"
@@ -64,6 +68,8 @@
   command: command email 
   register: check_email
   ignore_errors: true
+  failed_when: False
+  changed_when: check_email.rc == 2
 
 - name: Git clone eMail
   git: 
@@ -71,7 +77,7 @@
     dest: /tmp/email
     recursive: true
     update: false
-  when: check_email.rc != 0
+  changed_when: check_email.rc != 0
 
 # For instructions on setting it up: https://github.com/deanproxy/eMail
 - name: Build eMail

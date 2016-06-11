@@ -1,5 +1,5 @@
 ---
-- hosts: dads_laptop
+- hosts: desktop
   become: true
   roles: 
     - workstation

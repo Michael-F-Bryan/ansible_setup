@@ -1,23 +1,11 @@
 ---
 
-# UFW Rules
-# =========
-
-- name: UFW: Enable UFW
-  ufw: state=enabled 
-
-- name: UFW: Allow all outgoing
-  ufw: direction=outgoing policy=allow
-
-- name: UFW: Deny all incoming
-  ufw: direction=incoming policy=deny log=yes
-
-- name: UFW: Rate-limit SSH
-  ufw: rule=limit port=ssh proto=tcp
-
-- name: UFW: Allow all incoming traffic from LAN
-  ufw: rule=allow proto=tcp src={{ item }}
-  when: {{ ansible_default_ipv4.address | ipaddr('192.168.0.0/16') }} 
-  with_items:
-    - 192.168.0.0/16 
+- name: Copy across iptables.rules
+  template: 
+    src: "{{ role_path }}/templates/iptables.rules"
+    dest: /etc/iptables/iptables.rules 
+    owner: root
+    mode: "u=rw,og=r"
+  notify: 
+    - reload iptables
 

@@ -3,7 +3,6 @@
 - name: Install base packages
   package: name={{ item }} state=latest 
   with_items:
-    - cargo
     - cmake
     - git
     - gparted
@@ -30,6 +29,7 @@
     - python-pip
     - rust
     - gvim
+    - cargo
 
 - name: Install Ubuntu specific packages
   package: name={{ item }} state=latest
@@ -45,6 +45,7 @@
 
 - name: Install Pips
   pip: name={{ item }} state=present executable="pip3"
+  ignore_errors: true
   with_items:
     - bs4
     - cython
@@ -69,7 +70,7 @@
   register: check_email
   ignore_errors: true
   failed_when: False
-  changed_when: check_email.rc == 2
+  changed_when: check_email.rc
 
 - name: Git clone eMail
   git: 

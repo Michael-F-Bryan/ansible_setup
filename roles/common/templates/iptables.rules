@@ -32,7 +32,6 @@
 # Allow outbound email
 -A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp --dport 25 -m state --state NEW -j ACCEPT
 
-
 {% if ansible_default_ipv4.address|ipaddr('192.168.0.0/16') %}
 # If we are behind a router (IP is in 192.168.0.0/16) only allow incoming ssh from
 # places inside the local network
@@ -45,9 +44,19 @@
 # Allow all outgoing ssh connections
 -A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp --dport 22 -m state --state NEW -j ACCEPT
 
-
 # Allow all incoming and outgoing http/https connections
 -A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
+
+
+{% if inventory_hostname in groups['webserver'] %}
+# Web server specific settings
+
+# Open up http/https if it's a web server
+-A INPUT -i {{ ansible_default_ipv4.interface }} -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
+
+# Prevent DOS attempts
+-A INPUT -p tcp -m multiport --dport 80,443 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
+{% endif %}
 
 # Allow all incoming and outgoing to port 8080 (alternative http, also vpn)
 -A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp --dport 8080 -m state --state NEW -j ACCEPT

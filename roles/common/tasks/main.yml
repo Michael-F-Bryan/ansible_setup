@@ -1,0 +1,6 @@
+---
+
+- include: users.yml
+- include: installs.yml
+- include: security.yml
+- include: dotfiles.yml

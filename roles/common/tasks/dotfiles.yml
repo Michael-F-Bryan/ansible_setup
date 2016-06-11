@@ -99,3 +99,35 @@
     group: michael
     follow: true
 
+# Other miscellaneous config files
+# ===========
+
+- name: copy across tmux config
+  copy:
+    src: ~/.tmux.conf
+    dest:  /home/michael/.tmux.conf
+    owner: michael
+    group: michael
+
+- name: Create ~/.jupyter directory
+  file:
+    dest: /home/michael/.jupyter
+    owner: michael
+    group: michael
+    state: directory
+
+- name: copy across jupyter config
+  copy:
+    src: ~/.jupyter/jupyter_notebook_config.py
+    dest:  /home/michael/.jupyter/jupyter_notebook_config.py
+    owner: michael
+    group: michael
+
+- name: copy across gitconfig
+  copy:
+    src: ~/.gitconfig
+    dest:  /home/michael/.gitconfig
+    owner: michael
+    group: michael
+
+

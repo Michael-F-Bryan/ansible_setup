@@ -1,6 +1,6 @@
 ---
-- hosts: desktop
+- hosts: all
   become: true
   roles: 
-    - workstation
+    - common
 

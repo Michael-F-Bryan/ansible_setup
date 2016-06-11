@@ -1,0 +1,31 @@
+---
+
+- name: Create /etc/iptables folder
+  file:
+    dest: /etc/iptables
+    state: directory
+    owner: root
+
+- name: Copy across iptables.rules
+  template: 
+    src: "{{ role_path }}/templates/iptables.rules"
+    dest: /etc/iptables/iptables.rules 
+    owner: root
+    mode: "u=rw,og=r"
+  notify: 
+    - reload iptables
+
+- name: Reload iptables manually if service reload fails
+  shell: iptables-reload < /etc/iptables/iptables.rules
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Make sure iptables is loaded on boot for ubuntu
+  cron:
+    name: load iptables
+    job: "iptables-reload < /etc/iptables/iptables.rules"
+    user: root
+    special_time: reboot
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+

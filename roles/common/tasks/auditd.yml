@@ -1,0 +1,47 @@
+---
+
+- name: Install audit
+  package:
+    name: auditd
+    state: latest
+
+- name: Create /etc/audit
+  file:
+    dest: /etc/audit
+    owner: root
+    state: directory
+
+- name: Create /etc/audit/rules.d
+  file:
+    dest: /etc/audit/rules.d
+    owner: root
+    state: directory
+
+- name: Watch all files with setuid/gid bit
+  script:  "{{ role_path }}/files/find_setuid.sh"
+  become_user: root
+  register: set_uid
+
+- debug: msg="Added {{ set_uid.stdout_lines|length }} rules"
+
+- name: Copy across 1_preamble.rules
+  copy:
+    src: "{{ role_path }}/files/1_preamble.rules"
+    dest: /etc/audit/rules.d/1_preamble.rules
+    owner: root
+    group: root
+
+- name: Merge all rules into one file
+  assemble:
+    src: /etc/audit/rules.d
+    dest: /etc/audit/audit.rules
+    owner: root
+    group: root
+
+- name: Restart auditd
+  service:
+    name: auditd
+    state: restarted
+    enabled: true
+
+

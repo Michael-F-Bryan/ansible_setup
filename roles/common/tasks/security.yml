@@ -16,13 +16,13 @@
     - reload iptables
 
 - name: Reload iptables manually if service reload fails
-  shell: iptables-reload < /etc/iptables/iptables.rules
+  shell: iptables-restore < /etc/iptables/iptables.rules
   when: ansible_distribution == 'Ubuntu'
 
 - name: Make sure iptables is loaded on boot for ubuntu
   cron:
     name: load iptables
-    job: "iptables-reload < /etc/iptables/iptables.rules"
+    job: "iptables-restore < /etc/iptables/iptables.rules"
     user: root
     special_time: reboot
     state: present

@@ -15,7 +15,7 @@
     groups: sudo
     append: true
     shell: /bin/zsh
-    password: "$6$rounds=656000$dDWpSv3s.seQrpaL$mjKCAcfKfb21WM2BZ9PWBdWqktDhA2yAzWeOiY2qIHgFKWD/BlCWt5//3H9C3f9ETBSljP4/dWQCgqCOIteTy0"
+    password: "{{ michael_password }}"
 
 - name: Add the local ssh key
   authorized_key: 

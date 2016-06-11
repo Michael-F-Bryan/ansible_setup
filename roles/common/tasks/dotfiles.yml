@@ -52,11 +52,12 @@
   stat: path=/home/michael/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so
   register: ycm_core_file
 
+# This will fail if you don't have enough RAM, so limit to more than 700 MB
 - name: Compile YouCompleteMe
   shell: /usr/bin/python2 install.py --clang-completer
   args:
     chdir: /home/michael/.vim/bundle/YouCompleteMe
-  when: ycm_core_file.stat.exists == False
+  when: ycm_core_file.stat.exists == False and ansible_memtotal_mb > 700
 
 # Set Up ZSH
 # ==========

@@ -1,0 +1,10 @@
+---
+
+- name: Install personal computer specific software
+  package: name={{ item }} state=latest
+  ignore_errors: true
+  with_items:
+    - texmaker
+    - thunderbird
+
+

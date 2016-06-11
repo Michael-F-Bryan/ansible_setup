@@ -65,12 +65,12 @@
 -N LOGGING
 -A INPUT -j LOGGING
 -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
--A LOGGING -j DROP
+# -A LOGGING -j DROP
 
-# # Reject all remaining connections properly
-# -A INPUT -p tcp -j REJECT --reject-with tcp-reset 
-# -A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable 
-# -A INPUT -j REJECT --reject-with icmp-proto-unreachable 
+# Reject all remaining connections properly
+-A LOGGING -p tcp -j REJECT --reject-with tcp-reset 
+-A LOGGING -p udp -j REJECT --reject-with icmp-port-unreachable 
+-A LOGGING -j REJECT --reject-with icmp-proto-unreachable 
 
 COMMIT
 

@@ -17,13 +17,13 @@
 
 - name: Copy across blog.conf
   template: 
-    src: "blog.conf"
+    src: "{{ role_path }}/files/blog.conf"
     dest: /etc/nginx/sites-available/blog.conf
     owner: root
     mode: "u=rw,og=r"
   notify: reload nginx
 
-- name: Symlink blog.conf
+- name: Symlink blog.conf 
   file:
     src: /etc/nginx/sites-available/blog.conf
     dest: /etc/nginx/sites-enabled/blog.conf
@@ -42,14 +42,18 @@
     state: directory
     owner: jekyll
     group: jekyll
+  notify: build jekyll blog
 
 - name: Checkout blog repository
   git:
     repo: https://github.com/Michael-F-Bryan/blog.git
     dest: /home/jekyll/blog.git
+    clone: true
     bare: true
     update: true
     accept_hostkey: true
+  become_user: jekyll
+  notify: build jekyll blog
 
 - name: Create git hooks directory
   file:
@@ -60,10 +64,11 @@
 
 - name: Add post-receive hook
   copy:
-    src: post-receive
+    src: "{{ role_path }}/files/post-receive"
     dest: /home/jekyll/blog.git/hooks/post-receive
     owner: jekyll
     group: jekyll
     mode: "u=rwx,og=rx"
+  notify: build jekyll blog
 
 

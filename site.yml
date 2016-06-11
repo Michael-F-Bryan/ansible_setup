@@ -1,8 +1,8 @@
 ---
-- hosts: all
-  become: true
-  roles: 
-    - common
+# - hosts: all
+#   become: true
+#   roles: 
+#     - common
 
 - hosts: personal_use
   become: true

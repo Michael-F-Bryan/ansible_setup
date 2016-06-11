@@ -4,3 +4,9 @@
   service:
     name: nginx
     state: reloaded
+
+- name: build jekyll blog
+  shell: bash post-receive
+  args:
+    chdir: /home/jekyll/blog.git/hooks
+  become_user: jekyll

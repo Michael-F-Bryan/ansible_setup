@@ -1,5 +1,6 @@
 # Define all the computer names ahead of time
 dads_laptop     ansible_host=192.168.1.3          ansible_user=ansible
+craptop         ansible_host=192.168.1.4          ansible_user=ansible
 mfb_server      ansible_host=michaelfbryan.com    ansible_user=root
 desktop         ansible_host=192.168.1.2          ansible_user=root
 
@@ -12,3 +13,4 @@ mfb_server
 [personal_use]
 dads_laptop
 desktop
+craptop

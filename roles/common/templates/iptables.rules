@@ -1,4 +1,5 @@
 # Basic iptables rule file
+# Note: default interface = {{ ansible_default_ipv4.interface }}
 *filter
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
@@ -21,45 +22,45 @@
 {% endif %}
 
 # Allow DHCP
--A OUTPUT -o {{ ansible_default_ipv4.interface }} -p udp --sport 67:68 --dport 67:68 -j ACCEPT
+-A OUTPUT -p udp --sport 67:68 --dport 67:68 -j ACCEPT
 
 # Allow DNS
--A OUTPUT -o {{ ansible_default_ipv4.interface }} -p udp -m udp --dport 53 -j ACCEPT
+-A OUTPUT -p udp -m udp --dport 53 -j ACCEPT
 
 # Allow outbound Network Time Protocol requests
--A OUTPUT -o {{ ansible_default_ipv4.interface }} -p udp --dport 123 --sport 123 -j ACCEPT
+-A OUTPUT -p udp --dport 123 --sport 123 -j ACCEPT
 
 # Allow outbound email
--A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp --dport 25 -m state --state NEW -j ACCEPT
+-A OUTPUT -p tcp --dport 25 -m state --state NEW -j ACCEPT
 
 {% if ansible_default_ipv4.address|ipaddr('192.168.0.0/16') %}
 # If we are behind a router (IP is in 192.168.0.0/16) only allow incoming ssh from
 # places inside the local network
--A INPUT -s 192.168.0.0/16 -i {{ ansible_default_ipv4.interface }} -p tcp --dport 22 -m state --state NEW -j ACCEPT
+-A INPUT -s 192.168.0.0/16 -p tcp --dport 22 -m state --state NEW -j ACCEPT
 {% else %}
 # Allow incoming and outgoing ssh connections from anywhere
--A INPUT -i {{ ansible_default_ipv4.interface }} -p tcp --dport 22 -m state --state NEW -j ACCEPT
+-A INPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT
 {% endif %}
 
 # Allow all outgoing ssh connections
--A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp --dport 22 -m state --state NEW -j ACCEPT
+-A OUTPUT -p tcp --dport 22 -m state --state NEW -j ACCEPT
 
 # Allow all incoming and outgoing http/https connections
--A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
+-A OUTPUT -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
 
 
 {% if inventory_hostname in groups['webserver'] %}
 # Web server specific settings
 
 # Open up http/https if it's a web server
--A INPUT -i {{ ansible_default_ipv4.interface }} -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
+-A INPUT -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
 
 # Prevent DOS attempts
 -A INPUT -p tcp -m multiport --dport 80,443 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
 {% endif %}
 
 # Allow all incoming and outgoing to port 8080 (alternative http, also vpn)
--A OUTPUT -o {{ ansible_default_ipv4.interface }} -p tcp --dport 8080 -m state --state NEW -j ACCEPT
+-A OUTPUT -p tcp --dport 8080 -m state --state NEW -j ACCEPT
 
 # Next set up a chain that will log all remaining packets and drop them
 -N LOGGING

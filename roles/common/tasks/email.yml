@@ -1,0 +1,37 @@
+---
+
+- name: Check if eMail is installed
+  stat: path=/usr/local/bin/email
+  register: check_email
+  ignore_errors: true
+  failed_when: check_email.stat.exists == False
+
+- name: Git clone eMail
+  git: 
+    repo: https://github.com/deanproxy/eMail
+    dest: /tmp/email
+    recursive: true
+    update: false
+  when: check_email.stat.exists == False
+
+# For instructions on setting it up: https://github.com/deanproxy/eMail
+- name: Build eMail
+  shell: ./configure && make && make install
+  args:
+    chdir: /tmp/email
+  when: check_email.stat.exists == False
+
+- name: Copy across email.conf
+  copy:
+    src: "{{ role_path }}/files/email.conf"
+    dest: /usr/local/etc/email/email.conf
+    owner: root
+    group: root
+
+- name: Copy across email.sig
+  copy:
+    src: "{{ role_path }}/files/email.sig"
+    dest: /usr/local/etc/email/email.sig
+    owner: root
+    group: root
+

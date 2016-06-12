@@ -44,4 +44,14 @@
     state: restarted
     enabled: true
 
+- name: Copy across reporting script
+  copy:
+    src: "{{ role_path }}/files/audit_reporting.sh"
+    dest: /etc/audit/audit_reporting.sh
+    owner: root
+    group: root
+    mode: "u=rwx"
+
+- name: Create reporting cronjob
+  cron:
 

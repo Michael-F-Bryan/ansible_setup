@@ -1,9 +1,10 @@
 ---
 
-# - include: users.yml
-# - include: installs.yml
-# - include: firewall.yml
-# - include: dotfiles.yml
+- include: users.yml
+- include: installs.yml
+- include: email.yml
+- include: firewall.yml
+- include: dotfiles.yml
 
 - include: auditd.yml
   when: ansible_distribution == 'Ubuntu'

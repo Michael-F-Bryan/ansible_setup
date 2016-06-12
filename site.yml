@@ -9,7 +9,7 @@
   roles:
     - personal
 
-- hosts: webserver
+- hosts: webservers
   become: true
   roles:
     - webserver

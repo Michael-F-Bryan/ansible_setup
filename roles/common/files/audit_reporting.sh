@@ -20,3 +20,8 @@ aureport --summary -i --failed --key $start_to_end
 
 # Summary of all executables
 aureport -x --summary $start_to_end
+
+# All attempted ssh logins
+echo "Attempted login via SSH"
+echo "======================="
+sudo aureport -i --failed --login

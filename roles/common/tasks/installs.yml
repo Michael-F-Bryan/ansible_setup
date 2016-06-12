@@ -6,6 +6,7 @@
     - cmake
     - git
     - gparted
+    - hexchat
     - htop
     - iptables
     - nmap
@@ -35,7 +36,6 @@
   package: name={{ item }} state=latest
   when: ansible_distribution == 'Ubuntu'
   with_items:
-    - aptitude
     - cron
     - keepassx
     - python-dev

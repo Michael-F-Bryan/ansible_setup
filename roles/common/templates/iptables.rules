@@ -1,5 +1,4 @@
-# Basic iptables rule file
-# Note: default interface = {{ ansible_default_ipv4.interface }}
+# Basic iptables rule file # Note: default interface = {{ ansible_default_ipv4.interface }}
 *filter
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
@@ -49,7 +48,7 @@
 -A OUTPUT -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
 
 
-{% if inventory_hostname in groups['webserver'] %}
+{% if inventory_hostname in groups['webservers'] %}
 # Web server specific settings
 
 # Open up http/https if it's a web server
@@ -58,6 +57,14 @@
 # Prevent DOS attempts
 -A INPUT -p tcp -m multiport --dport 80,443 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
 {% endif %}
+
+
+{% if inventory_hostname in groups['personal_use'] %}
+# Allow IMAP in and secure SMTP out
+-A INPUT -p tcp --dport 993 -m state --state NEW -j ACCEPT
+-A OUTPUT -p tcp --dport 465 -m state --state NEW -j ACCEPT
+{% endif %}
+
 
 # Allow all incoming and outgoing to port 8080 (alternative http, also vpn)
 -A OUTPUT -p tcp --dport 8080 -m state --state NEW -j ACCEPT

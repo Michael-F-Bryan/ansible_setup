@@ -31,6 +31,11 @@
     owner: root
     group: root
 
+- name: Delete everything else in the rules folder
+  file:
+    dest: /etc/audit/rules.d/audit.rules
+    state: absent
+
 - name: Merge all rules into one file
   assemble:
     src: /etc/audit/rules.d
@@ -54,4 +59,11 @@
 
 - name: Create reporting cronjob
   cron:
+    name: auditing report
+    job: /etc/audit/audit_reporting.sh | email -s "[monitoring] {{ ansible_hostname }}" michaelfbryan@gmail.com
+    state: present
+    day: "*/2"
+    hour: 18
+    minute: 0
+    user: root
 

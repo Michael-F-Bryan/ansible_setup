@@ -42,7 +42,6 @@
     state: directory
     owner: jekyll
     group: jekyll
-  notify: build jekyll blog
 
 - name: Checkout blog repository
   git:
@@ -53,7 +52,6 @@
     update: true
     accept_hostkey: true
   become_user: jekyll
-  notify: build jekyll blog
 
 - name: Create git hooks directory
   file:
@@ -69,6 +67,12 @@
     owner: jekyll
     group: jekyll
     mode: "u=rwx,og=rx"
-  notify: build jekyll blog
 
+- name: build jekyll 
+  command: ./post-receive
+  args:
+    chdir: /home/jekyll/blog.git/hooks
+  become_user: jekyll
+  register: build
 
+- debug: msg={{ build.stdout }}

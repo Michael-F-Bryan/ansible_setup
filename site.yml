@@ -1,16 +1,16 @@
 ---
-- hosts: dads_laptop
+- hosts: all
   become: true
   roles: 
     - common
 
-# - hosts: personal_use
-#   become: true
-#   roles:
-#     - personal
+- hosts: personal_use
+  become: true
+  roles:
+    - personal
 
-# - hosts: webserver
-#   become: true
-#   roles:
-#     - webserver
+- hosts: webserver
+  become: true
+  roles:
+    - webserver
 

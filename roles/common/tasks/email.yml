@@ -21,6 +21,13 @@
     chdir: /tmp/email
   when: check_email.stat.exists == False
 
+- name: Create email configuration folder
+  file:
+    dest: /usr/local/etc/email
+    state: directory
+    owner: root
+    group: root
+
 - name: Copy across email.conf
   copy:
     src: "{{ role_path }}/files/email.conf"

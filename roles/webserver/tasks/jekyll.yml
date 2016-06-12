@@ -5,14 +5,13 @@
     name: ruby
     state: latest
 
-- name: Install pygments
-  pip: name=pygments state=latest executable=pip3
-
 - name: Install jekyll dependencies
-  gem: name={{ item }} state=latest user_install=false
+  gem: name={{ item }} state=latest 
   with_items:
     - jekyll
     - jekyll-paginate
     - pygments.rb
     - rake
+  become_user: jekyll
+  ignore_errors: true
 

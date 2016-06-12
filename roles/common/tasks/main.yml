@@ -1,7 +1,23 @@
 ---
 
-- include: users.yml
+- name: Make sure aptitude is installed
+  apt: name=aptitude state=latest
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Update Ubuntu ("apt-get update")
+  apt: update_cache=yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Upgrade Ubuntu ("apt-get upgrade -y")
+  apt: upgrade=yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Update Arch
+  pacman: update_cache=yes upgrade=yes
+  when: ansible_distribution == 'Archlinux'
+
 - include: installs.yml
+- include: users.yml
 - include: email.yml
 - include: firewall.yml
 - include: dotfiles.yml

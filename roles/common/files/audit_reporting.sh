@@ -8,13 +8,15 @@ start_to_end="--start $START --end $END"
 aureport $start_to_end
 
 # Login Report
-aureport --login --summary -i
-
-# Summary of all executables
-aureport -x --summary $start_to_end
+aureport --login --summary --success -i $start_to_end
+aureport --login --summary --failed -i $start_to_end
 
 # Anomaly report
 sudo aureport -n $start_to_end
 
-# The total log time range
-aureport -t
+# List events by key
+sudo aureport --summary -i --key --success $start_to_end
+aureport --summary -i --failed --key $start_to_end
+
+# Summary of all executables
+aureport -x --summary $start_to_end

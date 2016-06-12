@@ -7,6 +7,7 @@
     - git
     - gparted
     - htop
+    - iptables
     - nmap
     - ruby
     - tmux
@@ -15,7 +16,6 @@
     - wget
     - youtube-dl
     - zsh
-    - iptables
 
 - name: Ensure UFW isn't installed
   package: name=ufw state=absent
@@ -24,23 +24,24 @@
   package: name={{ item }} state=latest
   when: ansible_distribution == 'Archlinux'
   with_items:
+    - cargo
     - cronie
+    - gvim
     - keepassx2
     - python-pip
     - rust
-    - gvim
-    - cargo
 
 - name: Install Ubuntu specific packages
   package: name={{ item }} state=latest
   when: ansible_distribution == 'Ubuntu'
   with_items:
+    - aptitude
     - cron
     - keepassx
+    - python-dev
+    - python3-dev
     - python3-matplotlib
     - python3-pip
-    - python3-dev
-    - python-dev
     - vim-gtk
 
 - name: Install Python packages

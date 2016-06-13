@@ -1,0 +1,7 @@
+---
+- hosts: webservers
+  become: true
+  roles:
+    - webserver
+
+

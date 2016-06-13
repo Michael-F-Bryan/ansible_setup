@@ -28,4 +28,20 @@
     state: present
   when: ansible_distribution == 'Ubuntu'
 
+- name: Install fail2ban
+  package: name=fail2ban state=latest
+
+- name: Copy across jail.local
+  template:
+    src: "{{ role_path }}/templates/jail.local"
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: "u=rw"
+
+- name: Restart fail2ban
+  service:
+    name: fail2ban
+    state: restarted
+    enabled: true
 

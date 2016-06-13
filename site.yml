@@ -1,16 +1,5 @@
 ---
-- hosts: all
-  become: true
-  roles: 
-    - common
-
-- hosts: personal_use
-  become: true
-  roles:
-    - personal
-
-- hosts: webservers
-  become: true
-  roles:
-    - webserver
+- include: tasks/common.yml
+- include: tasks/personal_use.yml
+- include: tasks/webservers.yml
 

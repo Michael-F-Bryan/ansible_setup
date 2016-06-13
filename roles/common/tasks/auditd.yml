@@ -62,8 +62,8 @@
     name: auditing report
     job: /etc/audit/audit_reporting.sh | email -s "[monitoring] {{ ansible_hostname }}" michaelfbryan@gmail.com
     state: present
-    day: "*/2"
-    hour: 18
+    day: "*"
+    hour: 0
     minute: 0
     user: root
 

@@ -63,6 +63,12 @@
 # Allow IMAP in and secure SMTP out
 -A INPUT -p tcp --dport 993 -m state --state NEW -j ACCEPT
 -A OUTPUT -p tcp --dport 465 -m state --state NEW -j ACCEPT
+
+# Allow IRC out
+-A OUTPUT -p tcp -m multiport --dport 6697,6667,6668,6669 -m state --state NEW -j ACCEPT
+
+# Allow outgoing email connections
+-A OUTPUT -p tcp -m multiport --dport 993,995 -m state --state NEW -j ACCEPT
 {% endif %}
 
 

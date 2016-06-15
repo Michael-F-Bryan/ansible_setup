@@ -68,7 +68,7 @@
 -A OUTPUT -p tcp -m multiport --dport 6697,6667,6668,6669 -m state --state NEW -j ACCEPT
 
 # Allow outgoing email connections
--A OUTPUT -p tcp -m multiport --dport 993,995 -m state --state NEW -j ACCEPT
+-A OUTPUT -p tcp -m multiport --dport 143,465,587,993,995 -m state --state NEW -j ACCEPT
 {% endif %}
 
 

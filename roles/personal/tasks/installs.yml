@@ -6,5 +6,15 @@
   with_items:
     - texmaker
     - thunderbird
+    - vlc
+    - gimp
+    - nmap
+    - pgadmin3
+    - youtube-dl
+    - deluge
+    - gnupg
+    - gparted
+    - hexchat
+    - unetbootin
 
 

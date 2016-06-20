@@ -1,8 +1,16 @@
-# Basic iptables rule file # Note: default interface = {{ ansible_default_ipv4.interface }}
+# Basic iptables rule file 
+# Note: default interface = {{ ansible_default_ipv4.interface }}
 *filter
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
+
+{% if inventory_hostname in groups['personal_use'] %}
+{# We can afford to be lax and allow all outgoing connections #}
+:OUTPUT ACCEPT [0:0]
+{% else %}
+{# we need to be stricter #}
 :OUTPUT DROP [0:0]
+{% endif %}
 
 # Allow any established connections to continue
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 
@@ -47,6 +55,10 @@
 # Allow all incoming and outgoing http/https connections
 -A OUTPUT -p tcp -m multiport --dport 80,443 -m state --state NEW -j ACCEPT
 
+{% if inventory_hostname == 'dads_laptop' %}
+# Because dad's laptop is currently a GitLab server
+-A INPUT -p tcp -s 192.168.0.0/16 --dport 80 -m state --state NEW -j ACCEPT
+{% endif %}
 
 {% if inventory_hostname in groups['webservers'] %}
 # Web server specific settings
@@ -72,7 +84,7 @@
 {% endif %}
 
 
-# Allow all incoming and outgoing to port 8080 (alternative http, also vpn)
+# Allow all outgoing to port 8080 (alternative http, also vpn)
 -A OUTPUT -p tcp --dport 8080 -m state --state NEW -j ACCEPT
 
 # Next set up a chain that will log all remaining packets and drop them

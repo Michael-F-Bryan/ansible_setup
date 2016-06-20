@@ -57,10 +57,27 @@
     group: root
     mode: "u=rwx"
 
-- name: Create reporting cronjob
+# For audit reports
+- name: Create report emailing crontab
   cron:
     name: auditing report
     job: /etc/audit/audit_reporting.sh | email -s "[monitoring] {{ ansible_hostname }}" michaelfbryan@gmail.com
+    state: present
+    day: "*"
+    hour: 0
+    minute: 0
+    user: root
+
+- name: Create reports folder
+  file:
+    dest: /root/reports
+    state: directory
+    owner: root
+
+- name: Create local report crontab
+  cron:
+    name: auditing report
+    job: /etc/audit/audit_reporting.sh > /root/reports/report_$(date "+%F").txt
     state: present
     day: "*"
     hour: 0

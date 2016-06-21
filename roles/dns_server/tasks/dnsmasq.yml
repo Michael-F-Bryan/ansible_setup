@@ -4,10 +4,7 @@
   package: name=dnsmasq state=latest
 
 - name: Copy across dnsmasq.conf
-  src: 
-
-- name: Copy across dnsmasq.conf
-  template: 
+  copy: 
     src: "{{ role_path }}/files/dnsmasq.conf"
     dest: /etc/dnsmasq.conf
     owner: root
@@ -16,7 +13,7 @@
     - reload dnsmasq
 
 - name: Copy across /etc/hosts
-  template: 
+  copy: 
     src: "{{ role_path }}/files/hosts"
     dest: /etc/hosts
     owner: root

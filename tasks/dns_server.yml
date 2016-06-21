@@ -1,0 +1,7 @@
+---
+- hosts: raspberry_pi
+  become: true
+  roles:
+    - dns_server
+
+

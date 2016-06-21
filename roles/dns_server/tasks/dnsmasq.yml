@@ -1,0 +1,26 @@
+---
+
+- name: Install dnsmasq
+  package: name=dnsmasq state=latest
+
+- name: Copy across dnsmasq.conf
+  src: 
+
+- name: Copy across dnsmasq.conf
+  template: 
+    src: "{{ role_path }}/files/dnsmasq.conf"
+    dest: /etc/dnsmasq.conf
+    owner: root
+    mode: "u=rw,og=r"
+  notify: 
+    - reload dnsmasq
+
+- name: Copy across /etc/hosts
+  template: 
+    src: "{{ role_path }}/files/hosts"
+    dest: /etc/hosts
+    owner: root
+    mode: "u=rw,og=r"
+  notify: 
+    - reload dnsmasq
+

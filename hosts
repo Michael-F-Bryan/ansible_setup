@@ -4,6 +4,7 @@ craptop         ansible_host=192.168.1.4          ansible_user=ansible
 mfb_server      ansible_host=michaelfbryan.com    ansible_user=root
 desktop         ansible_host=192.168.1.2          ansible_user=root
 lenovo          ansible_host=192.168.1.7          ansible_user=ansible
+raspberry_pi    ansible_host=192.168.1.8          ansible_user=pi
 
 [arch]
 desktop
@@ -16,3 +17,6 @@ dads_laptop
 desktop
 craptop
 lenovo
+
+[dns_server]
+raspberry_pi

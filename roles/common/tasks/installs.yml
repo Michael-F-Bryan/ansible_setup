@@ -8,7 +8,6 @@
     - gparted
     - hexchat
     - htop
-    - iptables
     - nmap
     - ruby
     - tmux
@@ -17,9 +16,6 @@
     - wget
     - youtube-dl
     - zsh
-
-- name: Ensure UFW isn't installed
-  package: name=ufw state=absent
 
 - name: Install Arch specific packages
   package: name={{ item }} state=latest

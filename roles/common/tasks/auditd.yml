@@ -86,3 +86,47 @@
     minute: 0
     user: root
 
+
+# LogWatch
+# ========
+
+# Configure it for all ubuntu boxes
+
+- name: Install Postfix
+  package: name=postfix state=latest
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Transfer across /etc/aliases
+  copy:
+    src: "{{ role_path }}/files/aliases"
+    dest: /etc/aliases
+    owner: root
+    group: root
+    mode: "u=rw,og=r"
+
+- name: Set up Postfix to relay mail
+  debconf: 
+    name: postfix
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  with_items:
+    - { question: "postfix/mailname", value: "{{ ansible_fqdn }}", vtype: "string" }
+    - { question: "postfix/main_mailer_type", value: "Internet Site", vtype: "string" }
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install LogWatch
+  package: name=logwatch state=latest
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Create LogWatch daily reports
+  cron:
+    name: logwatch daily report
+    job: /usr/sbin/logwatch --output mail --mailto rouge.grand95@gmail.com --detail high
+    state: present
+    day: "*"
+    hour: 0
+    minute: 0
+    user: root
+  when: ansible_distribution == 'Ubuntu'
+

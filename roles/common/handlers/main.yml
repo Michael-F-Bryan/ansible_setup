@@ -6,3 +6,6 @@
     state: restarted
   ignore_errors: true
   register: reload_iptables
+
+- name: restart ssh
+  service: name=ssh state=restarted

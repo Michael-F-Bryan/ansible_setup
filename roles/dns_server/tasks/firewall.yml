@@ -1,0 +1,7 @@
+---
+
+- name: Set default policy to reject
+  ufw: direction=out policy=reject
+
+- name: Allow DNS queries through
+  ufw: rule=allow port=53 direction=in from_ip=192.168.0.0/16

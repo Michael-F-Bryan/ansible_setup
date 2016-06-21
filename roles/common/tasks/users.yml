@@ -21,3 +21,5 @@
   authorized_key: 
     user: michael 
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  notify: Restart ssh
+

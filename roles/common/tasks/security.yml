@@ -1,0 +1,105 @@
+---
+
+# UFW
+# ===
+
+- name: Install UFW
+  package: name=ufw state=latest
+
+- name: Reset UFW
+  ufw: state=reset
+
+- name: Enable UFW
+  ufw: state=enabled
+
+- name: Reject incoming stuff by default
+  ufw: direction=incoming policy=reject
+
+- name: Allow everything from localhost
+  ufw: from_ip=127.0.0.1 to_ip=127.0.0.1 rule=allow
+
+- name: Activate logging
+  ufw: logging=on
+
+- name: Allow incoming ssh
+  ufw: rule=limit port=ssh proto=tcp log=yes
+
+
+# Fail2Ban
+# ========
+
+- name: Install fail2ban
+  package: name=fail2ban state=latest
+
+- name: Copy across jail.local
+  template:
+    src: "{{ role_path }}/templates/jail.local"
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: "u=rw"
+
+- name: Restart fail2ban
+  service:
+    name: fail2ban
+    state: restarted
+    enabled: true
+
+
+# Lock Down SSH
+# =============
+
+- name: Add the local ssh key
+  authorized_key: 
+    user: michael 
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  notify: Restart ssh
+
+- name: Disallow password authentication
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+              state=present
+  notify: restart ssh
+
+- name: Disallow root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+              state=present
+  notify: restart ssh
+
+
+
+
+
+# - name: Create /etc/iptables folder
+#   file:
+#     dest: /etc/iptables
+#     state: directory
+#     owner: root
+
+# - name: Copy across iptables.rules
+#   template: 
+#     src: "{{ role_path }}/templates/iptables.rules"
+#     dest: /etc/iptables/iptables.rules 
+#     owner: root
+#     mode: "u=rw,og=r"
+#   notify: 
+#     - reload iptables
+
+# - name: Reload iptables manually if service reload fails
+#   shell: iptables-restore < /etc/iptables/iptables.rules
+#   when: ansible_distribution == 'Ubuntu'
+
+# - name: Make sure iptables is loaded on boot for ubuntu
+#   cron:
+#     name: load iptables
+#     job: "iptables-restore < /etc/iptables/iptables.rules"
+#     user: root
+#     special_time: reboot
+#     state: present
+#   when: ansible_distribution == 'Ubuntu'
+
+
+

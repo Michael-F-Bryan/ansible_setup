@@ -2,15 +2,15 @@
 
 - name: Make sure aptitude is installed
   apt: name=aptitude state=latest
-  when: ansible_distribution == 'Ubuntu' or "ansible_distribution" == "Debian"
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == "Debian"
 
 - name: Update Ubuntu ("apt-get update")
   apt: update_cache=yes
-  when: ansible_distribution == 'Ubuntu' or "ansible_distribution" == "Debian"
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == "Debian"
 
 - name: Upgrade Ubuntu ("apt-get upgrade -y")
   apt: upgrade=yes
-  when: ansible_distribution == 'Ubuntu' or "ansible_distribution" == "Debian"
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == "Debian"
 
 - name: Update Arch
   pacman: update_cache=yes upgrade=yes
@@ -19,8 +19,8 @@
 - include: installs.yml
 - include: users.yml
 - include: email.yml
-- include: firewall.yml
+- include: security.yml
 - include: dotfiles.yml
 
 - include: auditd.yml
-  when: ansible_distribution == 'Ubuntu' or "ansible_distribution" == "Debian"
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == "Debian"

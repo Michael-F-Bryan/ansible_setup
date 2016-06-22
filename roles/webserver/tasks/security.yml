@@ -1,7 +1,7 @@
 ---
 
 - name: Set default policy to reject
-  ufw: direction=out policy=reject
+  ufw: direction=outgoing policy=reject
 
 - name: Allow HTTP queries through
   ufw: rule=allow port=80 

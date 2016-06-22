@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: lenovo
   become: true
   roles: 
     - common

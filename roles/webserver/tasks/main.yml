@@ -3,3 +3,4 @@
 - include: nginx.yml
 - include: jekyll.yml
 - include: blog.yml
+- include: security.yml

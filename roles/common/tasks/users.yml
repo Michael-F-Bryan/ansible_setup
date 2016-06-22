@@ -17,9 +17,3 @@
     shell: /bin/zsh
     password: "{{ michael_password }}"
 
-- name: Add the local ssh key
-  authorized_key: 
-    user: michael 
-    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-  notify: Restart ssh
-

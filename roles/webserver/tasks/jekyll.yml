@@ -8,10 +8,10 @@
 - name: Install jekyll dependencies
   gem: name={{ item }} state=latest 
   with_items:
+    - rake
     - jekyll
     - jekyll-paginate
     - pygments.rb
-    - rake
   become_user: jekyll
   ignore_errors: true
 

@@ -63,12 +63,12 @@
 - name: Create report emailing crontab
   cron:
     name: emailed auditing report
-    job: /etc/audit/audit_reporting.sh | email -s "[monitoring] {{ ansible_hostname }}" michaelfbryan@gmail.com
+    job: sudo /etc/audit/audit_reporting.sh | email -s "[monitoring] {{ ansible_hostname }}" michaelfbryan@gmail.com
     state: present
     day: "*"
     hour: 0
     minute: 0
-    user: root
+    user: "{{ ansuble_user }}"
 
 - name: Create reports folder
   file:
@@ -79,12 +79,12 @@
 - name: Create local report crontab
   cron:
     name: local auditing report
-    job: /etc/audit/audit_reporting.sh > /root/reports/report_$(date "+%F").txt
+    job: sudo sh -c '/etc/audit/audit_reporting.sh > /root/reports/report_$(date "+%F").txt'
     state: present
     day: "*"
     hour: 0
     minute: 0
-    user: root
+    user: "{{ ansible_user }}"
 
 
 # LogWatch
@@ -122,11 +122,11 @@
 - name: Create LogWatch daily reports
   cron:
     name: logwatch daily report
-    job: /usr/sbin/logwatch --output mail --mailto rouge.grand95@gmail.com --detail high
+    job: sudo /usr/sbin/logwatch --detail high | email -s "[monitoring] {{ ansible_hostname }}" michaelfbryan@gmail.com 
     state: present
     day: "*"
     hour: 0
     minute: 0
-    user: root
+    user: "{{ ansible_user }}"
   when: ansible_distribution == 'Ubuntu'
 

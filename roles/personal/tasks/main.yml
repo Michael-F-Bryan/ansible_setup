@@ -1,3 +1,10 @@
 ---
 
 - include: installs.yml
+
+- name: copy across streisand.html
+  copy:
+    src: "{{ role_path }}/files/streisand.html"
+    dest: /home/michael/streisand.html
+    owner: michael
+    group: michael

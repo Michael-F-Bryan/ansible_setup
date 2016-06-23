@@ -15,6 +15,9 @@
 - name: Reject incoming stuff by default
   ufw: direction=incoming policy=reject
 
+- name: Accept outgoing stuff by default
+  ufw: direction=outgoing policy=allow
+
 - name: Allow everything from localhost
   ufw: from_ip=127.0.0.1 to_ip=127.0.0.1 rule=allow
 
@@ -22,8 +25,7 @@
   ufw: logging=on
 
 - name: Allow incoming ssh
-  ufw: rule=limit port=ssh proto=tcp log=yes
-
+  ufw: rule=limit to_port=22 log=yes 
 
 # Fail2Ban
 # ========
@@ -92,14 +94,14 @@
 #   shell: iptables-restore < /etc/iptables/iptables.rules
 #   when: ansible_distribution == 'Ubuntu'
 
-# - name: Make sure iptables is loaded on boot for ubuntu
-#   cron:
-#     name: load iptables
-#     job: "iptables-restore < /etc/iptables/iptables.rules"
-#     user: root
-#     special_time: reboot
-#     state: present
-#   when: ansible_distribution == 'Ubuntu'
+- name: Make sure iptables is loaded on boot for ubuntu
+  cron:
+    name: load iptables
+    job: "iptables-restore < /etc/iptables/iptables.rules"
+    user: root
+    special_time: reboot
+    state: absent
+  when: ansible_distribution == 'Ubuntu'
 
 
 

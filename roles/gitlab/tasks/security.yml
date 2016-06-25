@@ -1,0 +1,31 @@
+---
+
+- name: Install UFW
+  package: name=ufw state=latest
+
+- name: Reset UFW
+  ufw: state=reset
+
+- name: Enable UFW
+  ufw: state=enabled
+
+- name: Allow incoming ssh
+  ufw: rule=limit port=ssh proto=tcp log=yes 
+
+- name: Allow DNS queries out
+  ufw: rule=allow to_port=53 direction=out
+
+- name: Set default outgoing policy to allow
+  ufw: direction=outgoing policy=allow
+
+- name: Set default incoming policy to reject
+  ufw: direction=incoming policy=reject
+
+- name: Allow HTTP queries in
+  ufw: rule=allow to_port=80 proto=tcp direction=in
+
+- name: Allow HTTP/S queries  out
+  ufw: rule=allow from_port=80 proto=tcp direction=out
+
+- name: Allow mail out
+  ufw: rule=allow to_port=25 direction=out

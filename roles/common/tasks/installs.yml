@@ -16,6 +16,7 @@
     - wget
     - youtube-dl
     - zsh
+    - postfix
 
 - name: Install Arch specific packages
   package: name={{ item }} state=latest

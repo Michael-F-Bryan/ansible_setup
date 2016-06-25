@@ -1,5 +1,6 @@
 ---
 - include: tasks/common.yml
+- include: tasks/gitlab.yml
 - include: tasks/personal_use.yml
 - include: tasks/webservers.yml
 

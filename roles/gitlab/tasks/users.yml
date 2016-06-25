@@ -1,0 +1,24 @@
+---
+
+- name: Create "boobs" group
+  group:
+    name: boobs
+    state: present
+
+- name: Create Boobs User
+  user: 
+    name: boobs
+    state: present
+    update_password: on_create
+    generate_ssh_key: true
+    group: boobs
+    append: true
+    shell: /usr/bin/git-shell
+    password: "cmt14FSAE"
+
+- name: Add the local ssh key
+  authorized_key: 
+    user: boobs 
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  notify: Restart ssh
+

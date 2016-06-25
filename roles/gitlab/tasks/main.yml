@@ -1,0 +1,6 @@
+---
+
+- include: installs.yml
+- include: security.yml
+- include: users.yml
+# - include: gitlab.yml
